@@ -10,8 +10,7 @@
     - Game id, the played move, white_or_black, the fen string after that move, time?
 
 4) Profile
-    - display name, bio, profile pic??
+    - display name, bio, profile pic??, last modified date
 
 5) Friends
-    - two account_ids
-    
+    - two account_ids, date

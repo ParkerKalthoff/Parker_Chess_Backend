@@ -1,18 +1,13 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-class CustomUser(User):
+class CustomUser(AbstractUser):
     elo = models.FloatField(default=1000)
     id = models.AutoField(primary_key=True, editable=False)
 
     def __str__(self):
-        return f"{self.username}'s - Account"
-    
-    def get_rounded_elo(self):
-        """ Returns Elo rounded down, use for display """
-        return int(self.elo)
-
+        return f"ID {self.id} :: {self.username} : {self.elo}"
 
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
@@ -25,9 +20,9 @@ class Profile(models.Model):
         return {
             'user_id': self.user.id,
             'elo': self.user.elo,
-            'name': self.profile_name,
+            'profile_name': self.profile_name,
             'bio': self.bio,
-            'image' : self.profile_picture
+            'profile_picture' : self.profile_picture
         }
 
     def __str__(self):
@@ -36,21 +31,37 @@ class Profile(models.Model):
 
 class Game(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
-    white_player = models.ForeignKey(CustomUser, related_name='white_games', on_delete=models.CASCADE)
-    black_player = models.ForeignKey(CustomUser, related_name='black_games', on_delete=models.CASCADE)
-    game_winner = models.ForeignKey(CustomUser, related_name='wins', on_delete=models.CASCADE, null=True, blank=True)
+    white_player = models.ForeignKey(CustomUser, related_name='white_games', on_delete=models.SET_NULL)
+    black_player = models.ForeignKey(CustomUser, related_name='black_games', on_delete=models.SET_NULL)
+    white_player_elo = models.IntegerField(default=None)
+    black_player_elo = models.IntegerField(default=None)
+    game_winner = models.ForeignKey(CustomUser, related_name='wins', on_delete=models.SET_NULL, null=True, blank=True)
+    game_color_winner = models.TextField()
     date_time_played = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'Game ID {self.id} - {self.white_player.username} vs {self.black_player.username}'
+    
+    def get_game_info(self):
+        return {
+            'id' : self.id,
+            'white_player' : self.white_player,
+            'black_player' : self.black_player,
+            'white_player_elo' : self.white_player_elo,
+            'black_player_elo' : self.black_player_elo,
+            'game_winner' : self.game_winner,
+            'game_color_winner' : self.game_color_winner,
+            'date_time_played' : self.date_time_played,
+        }
 
 
 class Move(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     move_id = models.IntegerField()
-    move = models.CharField(max_length=6)
+    move = models.CharField(max_length=6) # formatted like 'A1A2' or 'A1O-O-O' or 'A7A8=Q'
+    piece = models.CharField(max_length=1)
     fen_string = models.CharField(max_length=90)
-    date_time_moved = models.DateTimeField(auto_now_add=True)
+    date_time_move_played = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ('game', 'move_id')

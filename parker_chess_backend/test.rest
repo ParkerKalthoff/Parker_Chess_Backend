@@ -1,0 +1,18 @@
+### Account Creation
+
+POST http://127.0.0.1:8000/signup 
+Content-Type: application/json
+
+{ "username": "testuser6", "password": "testuser6", "email": "ppppp@gmail.com" }
+### Account Login
+
+POST http://127.0.0.1:8000/login 
+Content-Type: application/json
+
+{ "username": "testuser4", "password": "password!" }
+
+### Account Auth Testing
+
+GET http://127.0.0.1:8000/test_token 
+Content-Type: application/json
+Authorization: token d75a58f9cf4c2a629dcc0255aea8267d8335d815

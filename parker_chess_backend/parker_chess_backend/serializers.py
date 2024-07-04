@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..parker_chess_app.models import *
+from parker_chess_app.models import *
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,0 +1,15 @@
+auth.User.groups: (fields.E304) Reverse accessor 'Group.user_set' for 'auth.User.groups' clashes with reverse accessor for 'parker_chess_app.CustomUser.groups'.
+        HINT: Add or change a related_name argument to the definition for 'auth.User.groups' or 'parker_chess_app.CustomUser.groups'.
+auth.User.user_permissions: (fields.E304) Reverse accessor 'Permission.user_set' for 'auth.User.user_permissions' clashes with reverse accessor for 'parker_chess_app.CustomUser.user_permissions'.
+        HINT: Add or change a related_name argument to the definition for 'auth.User.user_permissions' or 'parker_chess_app.CustomUser.user_permissions'.
+parker_chess_app.CustomUser.groups: (fields.E304) Reverse accessor 'Group.user_set' for 'parker_chess_app.CustomUser.groups' clashes with reverse accessor for 'auth.User.groups'.
+        HINT: Add or change a related_name argument to the definition for 'parker_chess_app.CustomUser.groups' or 'auth.User.groups'.
+parker_chess_app.CustomUser.user_permissions: (fields.E304) Reverse accessor 'Permission.user_set' for 'parker_chess_app.CustomUser.user_permissions' clashes with reverse accessor for 'auth.User.user_permissions'.
+        HINT: Add or change a related_name argument to the definition for 'parker_chess_app.CustomUser.user_permissions' or 'auth.User.user_permissions'.
+parker_chess_app.Following: (models.E012) 'unique_together' refers to the nonexistent field 'following'.
+parker_chess_app.Game.black_player: (fields.E320) Field specifies on_delete=SET_NULL, but cannot be null.
+        HINT: Set null=True argument on the field, or change the on_delete rule.
+parker_chess_app.Game.white_player: (fields.E320) Field specifies on_delete=SET_NULL, but cannot be null.
+        HINT: Set null=True argument on the field, or change the on_delete rule.
+parker_chess_app.Move.mover: (fields.E320) Field specifies on_delete=SET_NULL, but cannot be null.
+        HINT: Set null=True argument on the field, or change the on_delete rule.

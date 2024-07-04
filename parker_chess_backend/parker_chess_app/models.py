@@ -1,10 +1,13 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.db import models
 
 
 class CustomUser(AbstractUser):
     elo = models.FloatField(default=1000)
     id = models.AutoField(primary_key=True, editable=False)
+
+    groups = models.ManyToManyField(Group, related_name='customuser_set', blank=True)
+    user_permissions = models.ManyToManyField(Permission, related_name='customuser_set', blank=True)
 
     def __str__(self):
         return f"ID {self.id} :: {self.username} : {self.elo}"
@@ -33,8 +36,8 @@ class Profile(models.Model):
 
 class Game(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
-    white_player = models.ForeignKey(CustomUser, related_name='white', on_delete=models.SET_NULL)
-    black_player = models.ForeignKey(CustomUser, related_name='black', on_delete=models.SET_NULL)
+    white_player = models.ForeignKey(CustomUser, related_name='white', on_delete=models.SET_NULL, null=True)
+    black_player = models.ForeignKey(CustomUser, related_name='black', on_delete=models.SET_NULL, null=True)
     white_player_elo = models.IntegerField(default=None)
     black_player_elo = models.IntegerField(default=None)
     game_winner = models.ForeignKey(CustomUser, related_name='wins', on_delete=models.SET_NULL, null=True, blank=True)
@@ -61,7 +64,7 @@ class Move(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     move_id = models.IntegerField()
     move = models.CharField(max_length=6) # formatted like 'A1A2' or 'A1O-O-O' or 'A7A8=Q'
-    mover = models.ForeignKey(CustomUser, related_name='white_games', on_delete=models.SET_NULL)
+    mover = models.ForeignKey(CustomUser, related_name='white_games', on_delete=models.SET_NULL, null=True)
     piece = models.CharField(max_length=1)
     fen_string = models.CharField(max_length=90)
     date_time_move_played = models.DateTimeField(auto_now_add=True)
@@ -79,12 +82,12 @@ class Following(models.Model):
     date_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('main_account', 'following')
+        unique_together = ('main_account', 'account_following')
 
     def get_friend(self):
         return {
             'main_account' : self.main_account,
-            'following' : self.account_following,
+            'account_following' : self.account_following,
             'date_time' : self.date_time,
         }
 
